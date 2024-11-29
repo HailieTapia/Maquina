@@ -1,0 +1,167 @@
+<div class="container">
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+    <p>Cargando...</p>
+  </div>
+
+  <form [formGroup]="configForm" (ngSubmit)="updateConfig()" class="config-form">
+    <div class="form-actions">
+      <h2>Configuración Existente</h2>
+      <button mat-raised-button color="primary" type="submit" [disabled]="configForm.invalid">
+        Actualizar
+      </button>
+    </div>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>JWT Lifetime (segundos)</mat-label>
+      <input [(ngModel)]="config.jwt_lifetime" matInput type="number" formControlName="jwt_lifetime" />
+      <mat-error *ngIf="configForm.get('jwt_lifetime')?.errors as errors">
+        <span *ngIf="errors['required']">Este campo es obligatorio.</span>
+        <span *ngIf="errors['min']">Debe ser mayor o igual a 300.</span>
+        <span *ngIf="errors['max']">Debe ser menor o igual a 2592000.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Verificación Correo Lifetime (segundos)</mat-label>
+      <input [(ngModel)]="config.verificacion_correo_lifetime" matInput type="number"
+        formControlName="verificacion_correo_lifetime" />
+      <mat-error *ngIf="configForm.get('verificacion_correo_lifetime')?.errors as errors">
+        <span *ngIf="errors['required']">Este campo es obligatorio.</span>
+        <span *ngIf="errors['min']">Debe ser mayor o igual a 300.</span>
+        <span *ngIf="errors['max']">Debe ser menor o igual a 2592000.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>OTP Lifetime (segundos)</mat-label>
+      <input [(ngModel)]="config.otp_lifetime" matInput type="number" formControlName="otp_lifetime" />
+      <mat-error *ngIf="configForm.get('otp_lifetime')?.errors as errors">
+        <span *ngIf="errors['required']">Este campo es obligatorio.</span>
+        <span *ngIf="errors['min']">Debe ser mayor o igual a 60.</span>
+        <span *ngIf="errors['max']">Debe ser menor o igual a 1800.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Sesión Lifetime (segundos)</mat-label>
+      <input [(ngModel)]="config.sesion_lifetime" matInput type="number" formControlName="sesion_lifetime" />
+      <mat-error *ngIf="configForm.get('sesion_lifetime')?.errors as errors">
+        <span *ngIf="errors['required']">Este campo es obligatorio.</span>
+        <span *ngIf="errors['min']">Debe ser mayor o igual a 300.</span>
+        <span *ngIf="errors['max']">Debe ser menor o igual a 2592000.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Duración de la cookie (segundos)</mat-label>
+      <input [(ngModel)]="config.cookie_lifetime" matInput type="number" formControlName="cookie_lifetime" />
+      <mat-error *ngIf="configForm.get('cookie_lifetime')?.errors as errors">
+        <span *ngIf="errors['required']">Este campo es obligatorio.</span>
+        <span *ngIf="errors['min']">Debe ser mayor o igual a 300.</span>
+        <span *ngIf="errors['max']">Debe ser menor o igual a 2592000.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Días de Periodo de Bloqueo</mat-label>
+      <input [(ngModel)]="config.dias_periodo_de_bloqueo" matInput type="number"
+        formControlName="dias_periodo_de_bloqueo" />
+      <mat-error *ngIf="configForm.get('dias_periodo_de_bloqueo')?.errors as errors">
+        <span *ngIf="errors['required']">Este campo es obligatorio.</span>
+        <span *ngIf="errors['min']">Debe ser mayor o igual a 1.</span>
+        <span *ngIf="errors['max']">Debe ser menor o igual a 365.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Máximo Bloqueos en N Días</mat-label>
+      <input [(ngModel)]="config.maximo_bloqueos_en_n_dias" matInput type="number"
+        formControlName="maximo_bloqueos_en_n_dias" />
+      <mat-error *ngIf="configForm.get('maximo_bloqueos_en_n_dias')?.errors as errors">
+        <span *ngIf="errors['required']">Este campo es obligatorio.</span>
+        <span *ngIf="errors['min']">Debe ser mayor o igual a 1.</span>
+        <span *ngIf="errors['max']">Debe ser menor o igual a 10.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Máximo Intentos Fallidos Login</mat-label>
+      <input [(ngModel)]="config.maximo_intentos_fallidos_login" matInput type="number"
+        formControlName="maximo_intentos_fallidos_login" />
+      <mat-error *ngIf="configForm.get('maximo_intentos_fallidos_login')?.errors as errors">
+        <span *ngIf="errors['required']">Este campo es obligatorio.</span>
+        <span *ngIf="errors['min']">Debe ser mayor o igual a 3.</span>
+        <span *ngIf="errors['max']">Debe ser menor o igual a 10.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Expiration Threshold Lifetime (segundos)</mat-label>
+      <input [(ngModel)]="config.expirationThreshold_lifetime" matInput type="number"
+        formControlName="expirationThreshold_lifetime" />
+      <mat-error *ngIf="configForm.get('expirationThreshold_lifetime')?.errors as errors">
+        <span *ngIf="errors['required']">Este campo es obligatorio.</span>
+        <span *ngIf="errors['min']">Debe ser mayor o igual a 60.</span>
+        <span *ngIf="errors['max']">Debe ser menor o igual a 1800.</span>
+      </mat-error>
+    </mat-form-field>
+  </form>
+
+  <div class="config-form">
+    <div class="header-container">
+      <h2>Historial de intentos fallidos</h2>
+      <mat-button-toggle-group class="responsive-toggle-group" [(ngModel)]="selectedPeriodo"
+        (change)="onPeriodoChange()" appearance="standard">
+        <mat-button-toggle value="dia">Hoy</mat-button-toggle>
+        <mat-button-toggle value="semana">Última semana</mat-button-toggle>
+        <mat-button-toggle value="mes">Último mes</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <table mat-table [dataSource]="failedLoginDataSource" class="mat-elevation-z8 mat-table-responsive">
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+        <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef> Estado </th>
+        <td mat-cell *matCellDef="let element"> {{element.estado}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="numero_intentos">
+        <th mat-header-cell *matHeaderCellDef> Intentos </th>
+        <td mat-cell *matCellDef="let element"> {{element.numero_intentos}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="tipo_usuario">
+        <th mat-header-cell *matHeaderCellDef> Tipo de usuario </th>
+        <td mat-cell *matCellDef="let element"> {{element.tipo_usuario}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="fecha">
+        <th mat-header-cell *matHeaderCellDef> Fecha </th>
+        <td mat-cell *matCellDef="let element"> {{element.fecha | date:'short'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let attempt">
+          <button mat-icon-button color="primary" aria-label="Desbloquear usuario"
+            *ngIf="attempt.estado === 'bloqueado_permanente'" (click)="adminUnlockUser(attempt._id)">
+            <mat-icon>lock_open</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsFailedLogin"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsFailedLogin;"></tr>
+    </table>
+  </div>
+</div>

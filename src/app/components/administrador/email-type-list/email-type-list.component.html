@@ -1,0 +1,103 @@
+<div class="container">
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+    <p>Cargando...</p>
+  </div>
+  <div class="config-form">
+    <div class="header-container">
+      <h2>Tipos de email</h2>
+      <button mat-raised-button color="primary" (click)="openModal()">Crear</button>
+    </div>
+
+    <table mat-table [dataSource]="emailTypes" class="mat-elevation-z8 mat-table-responsive">
+      <ng-container matColumnDef="codigo">
+        <th mat-header-cell *matHeaderCellDef> Código </th>
+        <td mat-cell *matCellDef="let emailType"> {{ emailType.codigo }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+        <td mat-cell *matCellDef="let emailType"> {{ emailType.nombre }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="descripcion">
+        <th mat-header-cell *matHeaderCellDef> Descripción </th>
+        <td mat-cell *matCellDef="let emailType"> {{ emailType.descripcion }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="variables_requeridas">
+        <th mat-header-cell *matHeaderCellDef> Variables Requeridas </th>
+        <td mat-cell *matCellDef="let emailType"> {{ emailType.variables_requeridas.join(', ') }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let emailType">
+          <div class="action-buttons">
+            <button mat-icon-button color="warn" (click)="openModal(emailType)" matTooltip="Actualizar"
+              aria-label="Actualizar plantilla">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteEmailType(emailType._id)" matTooltip="Eliminar"
+              aria-label="Eliminar plantilla">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="['codigo', 'nombre', 'descripcion', 'variables_requeridas', 'acciones']">
+      </tr>
+      <tr mat-row
+        *matRowDef="let row; columns: ['codigo', 'nombre', 'descripcion', 'variables_requeridas','acciones'];"></tr>
+    </table>
+
+    <!-- Modal para crear una plantilla  -->
+    <ng-template #createOrUpdateModal>
+      <div mat-dialog-content class="create-modal">
+        <h3>{{ editingEmailTypeId ? 'Actualizar' : 'Crear' }} plantilla de email</h3>
+        <form [formGroup]="emailTypeForm" (ngSubmit)="onSubmit()" class="form-container">
+          <mat-form-field appearance="outline">
+            <mat-label>Código</mat-label>
+            <input matInput formControlName="codigo" required>
+            <mat-error *ngIf="emailTypeForm.get('codigo')?.errors as errors">
+              <span *ngIf="errors['required']">El código es obligatorio.</span>
+              <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre" required>
+            <mat-error *ngIf="emailTypeForm.get('nombre')?.errors as errors">
+              <span *ngIf="errors['required']">El nombre es obligatorio.</span>
+              <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput formControlName="descripcion"></textarea>
+            <mat-error *ngIf="emailTypeForm.get('descripcion')?.hasError('xssDetected')">
+              El campo contiene caracteres no permitidos.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Variables Requeridas (separadas por comas)</mat-label>
+            <input matInput formControlName="variables_requeridas" required>
+            <mat-error *ngIf="emailTypeForm.get('variables_requeridas')?.errors as errors">
+              <span *ngIf="errors['required']">El variables requeridas es obligatorio.</span>
+              <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+            </mat-error>
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-raised-button color="primary"  [disabled]="emailTypeForm.invalid" type="submit" class="submit-button">
+              {{ editingEmailTypeId ? 'Actualizar' : 'Crear' }}
+            </button>
+            <button mat-button (click)="closeModal()" mat-dialog-close>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+  </div>

@@ -1,0 +1,87 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Centrar verticalmente */
+  padding: 0 20px; /* Espacio en los laterales */
+  background-color: var(--background-color); /* Fondo del tema */
+}
+
+.login-card {
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
+  background-color: var(--background); /* Fondo del card */
+}
+
+mat-card-header {
+  display: flex; /* Usar Flexbox */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  margin-bottom: 35px;
+}
+
+.login-title {
+  font-weight: bold;
+  font-size: 24px; /* Tamaño de fuente aumentado */
+  color: var(--text-color); /* Color del texto */
+  margin: 0; /* Eliminar márgenes */
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.full-width {
+  width: 100%; /* Campos de entrada de ancho completo */
+  margin-bottom: 9x;
+}
+
+.actions {
+  margin-top: 20px;
+}
+
+.error-message {
+  color: #d9534f; /* Color rojo para mensajes de error */
+  text-align: center;
+  margin-top: 10px;
+}
+
+.footer {
+  margin-top: 15px;
+  text-align: left;
+}
+
+.footer a {
+  color: var(--primary-color); /* Color del enlace */
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+
+.footer a:hover {
+  text-decoration: underline; /* Subrayado en hover */
+}
+
+/* Responsividad */
+@media (max-width: 600px) {
+  .login-card {
+    padding: 15px; /* Ajustar padding para pantallas más pequeñas */
+  }
+
+  .login-title {
+    font-size: 20px; /* Tamaño de fuente más pequeño en móviles */
+  }
+
+  .footer {
+    font-size: 0.9rem; /* Ajustar el tamaño de la fuente */
+  }
+}
+
+@media (max-width: 400px) {
+  .login-title {
+    font-size: 18px; /* Aún más pequeño en pantallas muy pequeñas */
+  }
+
+  .footer a {
+    font-size: 0.8rem; /* Reducir tamaño de enlace en móviles pequeños */
+  }
+}

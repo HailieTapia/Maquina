@@ -1,0 +1,156 @@
+<div class="container">
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+    <p>Cargando...</p>
+  </div>
+<div class="config-form">
+  <div class="header-container">
+    <h2>Documentos Regulatorios</h2>
+    <button mat-raised-button color="primary" (click)="openCreateModal(createModal)">
+      Crear </button>
+  </div>
+
+  <!-- Tabla de documentos -->
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-responsive">
+    <ng-container matColumnDef="titulo">
+      <th mat-header-cell *matHeaderCellDef> Título </th>
+      <td mat-cell *matCellDef="let element"> {{ element.titulo }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fecha_vigencia">
+      <th mat-header-cell *matHeaderCellDef> Fecha de Vigencia </th>
+      <td mat-cell *matCellDef="let element"> {{ element.fecha_vigencia | date:'medium' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="contenido">
+      <th mat-header-cell *matHeaderCellDef> Contenido </th>
+      <td mat-cell *matCellDef="let element"> {{ element.contenido }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="version">
+      <th mat-header-cell *matHeaderCellDef> Versión Actual </th>
+      <td mat-cell *matCellDef="let element"> {{ element.version }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let element" class="action-buttons">
+        <button mat-icon-button color="warn" (click)="openUpdateModal(element)" matTooltip="Actualizar"
+          aria-label="Actualizar documento">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteDocument(element.id)" matTooltip="Eliminar"
+          aria-label="Eliminar documento">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <!-- Button to open version history modal -->
+        <button mat-icon-button color="warn" (click)="openVersionHistoryModal(element)"
+          matTooltip="Ver historial de versiones" aria-label="Ver historial de versiones">
+          <mat-icon>history</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <!-- Modal para crear documento -->
+  <ng-template #createModal>
+    <div mat-dialog-content class="create-modal">
+      <h3>Nuevo documento regulatorio</h3>
+
+      <form (ngSubmit)="createDocument()" #documentForm="ngForm" class="form-container">
+        <mat-form-field appearance="outline">
+          <mat-label>Título</mat-label>
+          <mat-select [(ngModel)]="newDocument.titulo" name="titulo" required #titulo="ngModel">
+            <mat-option value="Política de privacidad">Política de privacidad</mat-option>
+            <mat-option value="Términos y condiciones">Términos y condiciones</mat-option>
+            <mat-option value="Deslinde legal">Deslinde legal</mat-option>
+          </mat-select>
+          <mat-error *ngIf="titulo.invalid && titulo.touched">Este campo es obligatorio.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Contenido</mat-label>
+          <textarea matInput placeholder="Contenido del documento en Markdown" [(ngModel)]="newDocument.contenido"
+            name="contenido" required #contenido="ngModel"></textarea>
+          <mat-error *ngIf="contenido.invalid && contenido.touched">El contenido es obligatorio.</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de Vigencia</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="newDocument.fecha_vigencia" name="fecha_vigencia">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!documentForm.form.valid">Crear</button>
+          <button mat-button mat-dialog-close>Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <!-- Modal para actualizar documento -->
+  <ng-template #updateModal let-data>
+    <div mat-dialog-content class="update-modal">
+      <h3>Actualizar</h3>
+      <form (ngSubmit)="updateDocument(data.id)" #updateForm="ngForm" class="form-container">
+        <mat-form-field appearance="outline">
+          <mat-label>Título</mat-label>
+          <mat-select [(ngModel)]="newDocument.titulo" name="titulo" required #titulo="ngModel">
+            <mat-option value="Política de privacidad">Política de privacidad</mat-option>
+            <mat-option value="Términos y condiciones">Términos y condiciones</mat-option>
+            <mat-option value="Deslinde legal">Deslinde legal</mat-option>
+          </mat-select>
+          <mat-error *ngIf="titulo.invalid && titulo.touched">Este campo es obligatorio.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Contenido</mat-label>
+          <textarea matInput placeholder="Contenido del documento en Markdown" [(ngModel)]="newDocument.contenido"
+            name="contenido" required #contenido="ngModel"></textarea>
+          <mat-error *ngIf="contenido.invalid && contenido.touched">El contenido es obligatorio.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de Vigencia</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="newDocument.fecha_vigencia" name="fecha_vigencia">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit"
+            [disabled]="!updateForm.form.valid">Actualizar</button>
+          <button mat-button mat-dialog-close>Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+  <!-- Add a modal for version history -->
+  <ng-template #versionHistoryModal let-data>
+    <div mat-dialog-content class="version-history-modal">
+      <h3>Historial de Versiones {{ data.documentTitle }}</h3>
+
+      <table mat-table [dataSource]="data.versions" class="mat-elevation-z8">
+        <ng-container matColumnDef="version">
+          <th mat-header-cell *matHeaderCellDef> Versión </th>
+          <td mat-cell *matCellDef="let element"> {{ element.version }} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="contenido">
+          <th mat-header-cell *matHeaderCellDef> Contenido </th>
+          <td mat-cell *matCellDef="let element"> {{ element.contenido }} </td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="['version', 'contenido']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['version', 'contenido'];"></tr>
+      </table>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="closeModal()">Cerrar</button>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,136 @@
+.recu-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 0 20px;
+    background-color: var(--background-color);
+}
+
+.recu-card {
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+    background-color: var(--background);
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 24px;
+    color: var(--text-color);
+    margin-bottom: 15px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.otp-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.otp-inputs {
+    display: flex;
+    gap: 1px;
+}
+
+.otp-inputs input {
+    width: 30px;
+    height: 40px;
+    text-align: center;
+    font-size: 15px;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.otp-inputs input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 5px var(--accent-color);
+    outline: none;
+}
+
+.otp-inputs input::placeholder {
+    color: var(--placeholder-color);
+    opacity: 0.7;
+}
+
+.input-wrapper input {
+    width: 93%;
+    padding: 12px;
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: var(--input-background-color);
+    transition: border-color 0.3s ease;
+}
+
+.input-wrapper input:focus {
+    border-color: var(--accent-color);
+}
+
+/* Estilo para la barra de progreso */
+mat-progress-bar {
+    height: 20px;
+    border-radius: 5px;
+    background-color: #f0f0f0aa;
+    margin-bottom: 5px;
+}
+
+/* Para el texto dentro de la barra de progreso */
+mat-progress-bar::after {
+    content: attr(aria-valuenow) "%";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #000000;
+    font-weight: bold;
+    font-size: 14px;
+}
+.full-width {
+    width: 100%;
+}
+
+.password-strength-info {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    text-align: right;
+}
+/* Responsividad */
+@media (max-width: 600px) {
+    .recu-card {
+        max-width: 90%;
+        padding: 15px;
+    }
+
+    .recu-title {
+        font-size: 20px;
+    }
+
+    .otp-inputs input {
+        width: 30px;
+        height: 35px;
+    }
+
+    .input-wrapper input {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 400px) {
+    .recu-title {
+        font-size: 18px;
+    }
+
+    .input-wrapper input {
+        font-size: 12px;
+    }
+}

@@ -1,0 +1,185 @@
+<div class="container">
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+    <p>Cargando...</p>
+  </div>
+
+  <div class="config-form">
+    <div *ngIf="!isLoading && profile">
+      <form [formGroup]="PerfilForm" (ngSubmit)="updateUserProfile()">
+        <div class="header-container">
+          <h2>Perfil</h2>
+          <button mat-raised-button color="primary" [disabled]="PerfilForm.invalid" type="submit">
+            Actualizar perfil
+          </button>
+        </div>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Nombre</mat-label>
+          <input [(ngModel)]="profile.nombre" matInput type="text" formControlName="nombre" />
+          <mat-error *ngIf="PerfilForm.get('nombre')?.errors as errors">
+            <span *ngIf="errors['required']">El nombre es obligatorio.</span>
+            <span *ngIf="!errors['pattern'] && errors['minlength']">El nombre debe tener al menos 3 caracteres.</span>
+            <span *ngIf="errors['maxlength']">El nombre no puede tener más de 50 caracteres.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+            <span *ngIf="!errors['xssDetected'] && errors['pattern']">Ingresa un nombre válido.</span>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Email</mat-label>
+          <input [(ngModel)]="profile.email" matInput type="email" formControlName="email" readonly />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Teléfono</mat-label>
+          <input [(ngModel)]="profile.telefono" matInput type="text" formControlName="telefono" maxlength="10" />
+          <mat-error *ngIf="PerfilForm.get('telefono')?.errors as errors">
+            <span *ngIf="errors['required']">El teléfono es obligatorio.</span>
+            <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un número de teléfono válido de 10
+              dígitos.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+          </mat-error>
+        </mat-form-field>
+      </form>
+
+      <mat-card class="password-card">
+        <mat-card-content>
+          <div class="password-display">
+            <span>Contraseña: *******</span>
+            <button mat-button color="warn" (click)="openChangePasswordDialog()"
+              style="float: right;">Modificar</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="profile-container">
+      <form [formGroup]="addressForm" (ngSubmit)="updateUserDireccion()">
+        <div class="header-container">
+          <h2>Dirección</h2>
+          <button mat-raised-button color="primary" [disabled]="addressForm.invalid" type="submit">Actualizar
+            dirección</button>
+        </div>
+
+        <mat-form-field appearance="outline" class="form-field" *ngIf="profile?.direccion">
+          <mat-label>Calle</mat-label>
+          <input [(ngModel)]="profile.direccion.calle" matInput type="text" formControlName="calle" />
+          <mat-error *ngIf="addressForm.get('calle')?.errors as errors">
+            <span *ngIf="errors['required']">La calle es obligatoria.</span>
+            <span *ngIf="!errors['pattern'] && errors['minlength']">Debe tener al menos 3 caracteres.</span>
+            <span *ngIf="errors['maxlength']">No puede exceder los 100 caracteres.</span>
+            <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce una calle válida.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field" *ngIf="profile?.direccion">
+          <mat-label>Ciudad</mat-label>
+          <input [(ngModel)]="profile.direccion.ciudad" matInput type="text" formControlName="ciudad" />
+          <mat-error *ngIf="addressForm.get('ciudad')?.errors as errors">
+            <span *ngIf="errors['required']">La ciudad es obligatoria.</span>
+            <span *ngIf="errors['minlength']">Debe tener al menos 3 caracteres.</span>
+            <span *ngIf="errors['maxlength']">No puede exceder los 50 caracteres.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+            <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce una cuidad válida.</span>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field" *ngIf="profile?.direccion">
+          <mat-label>Código Postal</mat-label>
+          <input maxlength="5" [(ngModel)]="profile.direccion.codigo_postal" matInput type="text"
+            formControlName="codigo_postal" />
+          <mat-error *ngIf="addressForm.get('codigo_postal')?.errors as errors">
+            <span *ngIf="errors['required']">El código postal es obligatorio.</span>
+            <span *ngIf="!errors['xssDetected'] && errors['pattern']">Debe contener 5 dígitos númericos.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field" *ngIf="profile?.direccion">
+          <mat-label>Estado</mat-label>
+          <input [(ngModel)]="profile.direccion.estado" matInput type="text" formControlName="estado" />
+          <mat-error *ngIf="addressForm.get('estado')?.errors as errors">
+            <span *ngIf="errors['required']">El estado es obligatorio.</span>
+            <span *ngIf="!errors['pattern'] && errors['minlength']">Debe tener al menos 3 caracteres.</span>
+            <span *ngIf="errors['maxlength']">No puede exceder los 50 caracteres.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+            <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un estado válida.</span>
+          </mat-error>
+        </mat-form-field>
+      </form>
+    </div>
+
+    <button (click)="deleteAccount()" mat-raised-button color="warn">
+      Eliminar cuenta
+    </button>
+  </div>
+
+  <div class="modal" *ngIf="showModal">
+    <div class="modal-content">
+      <h2>Cambiar Contraseña</h2>
+
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Contraseña Actual</mat-label>
+          <input id="currentPassword" [type]="hideCurrentPassword ? 'password' : 'text'"
+            formControlName="currentPassword" required matInput />
+          <button mat-icon-button matSuffix (click)="hideCurrentPassword = !hideCurrentPassword"
+            aria-label="Toggle password visibility">
+            <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordForm.get('currentPassword')?.errors as errors">
+            <span *ngIf="errors['required']">La contraseña es obligatoria.</span>
+            <span *ngIf="errors['minlength']">Debe tener al menos 8 caracteres.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nueva contraseña:</mat-label>
+          <input id="new-password" [type]="hideNewPassword ? 'password' : 'text'" formControlName="newPassword" required
+            matInput />
+          <button mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword"
+            aria-label="Toggle password visibility">
+            <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordForm.get('newPassword')?.errors as errors">
+            <span *ngIf="errors['required']">La nueva contraseña es obligatoria.</span>
+            <span *ngIf="errors['compromised']">La contraseña ha sido comprometida, elige otra.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+            <span
+              *ngIf="!errors['xssDetected'] && errors['weakPassword'] && !passwordForm.get('newPassword')?.hasError('required')">Por
+              favor, utiliza una contraseña más segura.</span>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-progress-bar *ngIf="passwordStrength" mode="determinate" [value]="passwordStrengthValue"
+          [color]="passwordStrengthColor"></mat-progress-bar>
+        <div class="password-strength-info" *ngIf="passwordStrength">
+          Fortaleza: {{ passwordStrength }}
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirma tu contraseña:</mat-label>
+          <input id="confirm-password" [type]="hideConfirmPassword ? 'password' : 'text'"
+            formControlName="confirmPassword" required matInput />
+          <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword"
+            aria-label="Toggle password visibility">
+            <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordForm.get('confirmPassword')?.errors as errors">
+            <span *ngIf="errors['required']">La confirmación de contraseña es obligatoria.</span>
+            <span *ngIf="errors['mismatch']"> Las contraseñas no coinciden.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" [disabled]="passwordForm.invalid" type="submit">Cambiar
+            Contraseña</button>
+          <button mat-button (click)="closeModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

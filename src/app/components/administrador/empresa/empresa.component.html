@@ -1,0 +1,189 @@
+<div class="container">
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+    <p>Cargando...</p>
+  </div>
+
+  <form [formGroup]="companyForm" (ngSubmit)="actualizar()" class="config-form">
+    <div class="form-actions">
+      <h2>Perfil de la Empresa</h2>
+      <button mat-raised-button color="primary" type="submit" [disabled]="companyForm.invalid">
+        Actualizar
+      </button>
+    </div>
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Nombre de la Empresa</mat-label>
+      <input matInput formControlName="nombre" />
+      <mat-error *ngIf="companyForm.get('nombre')?.errors as errors">
+        <span *ngIf="errors['required']">El nombre es obligatorio.</span>
+        <span *ngIf="errors['minlength']">El nombre debe tener al menos 2 caracteres.</span>
+        <span *ngIf="errors['maxlength']">El nombre no puede tener más de 100 caracteres.</span>
+        <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+      </mat-error>
+    </mat-form-field>
+    
+    <div class="form-field logo-upload">
+      <label class="upload-label">Logo de la Empresa</label>
+      <div class="upload-button-container">
+        <input type="file" #fileInput (change)="onLogoSelected($event)" accept="image/*" class="upload-input" />
+        <button type="button" class="upload-button" (click)="triggerFileInput(fileInput)">
+          <i class="material-icons">cloud_upload</i>
+          <span>Seleccionar Archivo</span>
+        </button>
+        <p class="upload-placeholder">Sube tu imagen aquí (JPEG, PNG, GIF, máx. 2MB)</p>
+      </div>
+    </div>
+
+    <div *ngIf="logoPreview" class="logo-preview">
+      <p>Vista Previa del Logo:</p>
+      <img [src]="logoPreview" alt="Logo de la Empresa" />
+    </div>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" />
+      <mat-error *ngIf="companyForm.get('email')?.errors as errors">
+        <span *ngIf="!errors['xssDetected'] && errors['email']">Ingresa un email válido.</span>
+        <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Slogan</mat-label>
+      <input matInput formControlName="slogan" />
+      <mat-error *ngIf="companyForm.get('slogan')?.errors as errors">
+        <span *ngIf="!errors['xssDetected'] && errors['maxlength']"> El slogan no puede tener más de 100
+          caracteres.</span>
+        <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <div formGroupName="direccion">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Calle</mat-label>
+        <input matInput formControlName="calle" />
+        <mat-error *ngIf="companyForm.get('direccion.calle')?.errors as errors">
+          <span *ngIf="!errors['pattern'] && errors['minlength']">Debe tener al menos 3 caracteres.</span>
+          <span *ngIf="errors['maxlength']">No puede exceder los 100 caracteres.</span>
+          <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce una calle válida.</span>
+          <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Ciudad</mat-label>
+        <input matInput formControlName="ciudad" />
+        <mat-error *ngIf="companyForm.get('direccion.ciudad')?.errors as errors">
+          <span *ngIf="!errors['pattern'] && errors['minlength']">La ciudad debe tener al menos 2 caracteres.</span>
+          <span *ngIf="!errors['xssDetected'] && errors['maxlength']">La ciudad no puede exceder los 50 caracteres.</span>
+          <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce una ciudad válida.</span>
+          <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Estado</mat-label>
+        <input matInput formControlName="estado" />
+        <mat-error *ngIf="companyForm.get('direccion.estado')?.errors as errors">
+          <span *ngIf="!errors['pattern'] && errors['minlength']">Debe tener al menos 3 caracteres.</span>
+          <span *ngIf="!errors['xssDetected'] && errors['maxlength']">No puede exceder los 50 caracteres.</span>
+          <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un estado válido</span>
+          <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Código Postal</mat-label>
+        <input matInput formControlName="codigo_postal" maxlength="5" />
+        <mat-error *ngIf="companyForm.get('direccion.codigo_postal')?.errors as errors">
+          <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un código postal válido</span>
+          <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>País</mat-label>
+        <input matInput formControlName="pais" />
+        <mat-error *ngIf="companyForm.get('direccion.pais')?.errors as errors">
+          <span *ngIf="!errors['pattern'] && errors['minlength']">Debe tener al menos 3 caracteres.</span>
+          <span *ngIf="!errors['xssDetected'] && errors['maxlength']">No puede exceder los 50 caracteres.</span>
+          <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un pais válido</span>
+          <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div formGroupName="telefono">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Número de Teléfono</mat-label>
+        <input matInput type="tel" formControlName="numero" />
+        <mat-error *ngIf="companyForm.get('telefono.numero')?.errors as errors">
+          <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un número de teléfono válido de 10
+            dígitos.</span>
+          <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div formGroupName="redes_sociales">
+      <div class="field-group">
+        <mat-form-field appearance="outline" class="input-container">
+          <mat-label>Facebook</mat-label>
+          <input matInput formControlName="facebook" />
+          <mat-error *ngIf="companyForm.get('redes_sociales.facebook')?.errors as errors">
+            <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un Facebook válido.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+          </mat-error>
+        </mat-form-field>
+        <button mat-icon-button color="warn" (click)="onDeleteSocialMediaLink('facebook')" matTooltip="Eliminar"
+          aria-label="Eliminar documento" class="delete-button">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <div class="field-group">
+        <mat-form-field appearance="outline" class="input-container">
+          <mat-label>Instagram</mat-label>
+          <input matInput formControlName="instagram" />
+          <mat-error *ngIf="companyForm.get('redes_sociales.instagram')?.errors as errors">
+            <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un Instagram válido.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+          </mat-error>
+        </mat-form-field>
+        <button mat-icon-button color="warn" (click)="onDeleteSocialMediaLink('instagram')" matTooltip="Eliminar"
+          aria-label="Eliminar documento" class="delete-button">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <div class="field-group">
+        <mat-form-field appearance="outline" class="input-container">
+          <mat-label>LinkedIn</mat-label>
+          <input matInput formControlName="linkedin" />
+          <mat-error *ngIf="companyForm.get('redes_sociales.linkedin')?.errors as errors">
+            <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un LinkedIn válido.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+          </mat-error>
+        </mat-form-field>
+        <button mat-icon-button color="warn" (click)="onDeleteSocialMediaLink('linkedin')" matTooltip="Eliminar"
+          aria-label="Eliminar documento" class="delete-button">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <div class="field-group">
+        <mat-form-field appearance="outline" class="input-container">
+          <mat-label>Twitter</mat-label>
+          <input matInput formControlName="twitter" />
+          <mat-error *ngIf="companyForm.get('redes_sociales.twitter')?.errors as errors">
+            <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un Twitter válido.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
+          </mat-error>
+        </mat-form-field>
+        <button mat-icon-button color="warn" (click)="onDeleteSocialMediaLink('twitter')" matTooltip="Eliminar"
+          aria-label="Eliminar documento" class="delete-button">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </form>
